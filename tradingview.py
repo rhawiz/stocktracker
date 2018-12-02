@@ -10,7 +10,7 @@ from time import sleep
 
 import logging
 from dotenv import load_dotenv
-from pymouse import PyMouse
+# from pymouse import PyMouse
 from pynput.keyboard import Key, Controller
 
 from selenium.webdriver.support.wait import WebDriverWait
@@ -105,43 +105,43 @@ def extract_text(b64_encoded):
 
 def collect():
     keyboard = Controller()
-    with open("{}_{}.csv".format(EXCHANGE, SYMBOL), "a") as f:
-        writer = csv.writer(f)
+    f = open("{}_{}_{}.csv".format(EXCHANGE, SYMBOL, int(time.time())), "a")
+    writer = csv.writer(f)
 
-        while True:
-            # for i, canvas in enumerate(driver.find_elements_by_tag_name("canvas")):
+    while True:
+        # for i, canvas in enumerate(driver.find_elements_by_tag_name("canvas")):
 
-            try:
-                canvas = driver.find_elements_by_tag_name("canvas")[8]
-                canvas_base64 = driver.execute_script("return arguments[0].toDataURL('image/png').substring(21);",
-                                                      canvas)
-                time_text = extract_text(canvas_base64)
-                timestamp = int(parse_time(time_text))
-                huOpen = driver.execute_script(huOpenSelector)
-                huHigh = driver.execute_script(huHighSelector)
-                huLow = driver.execute_script(huLowSelector)
-                huClose = driver.execute_script(huCloseSelector)
-                huVolume1 = driver.execute_script(huVol1Selector)
-                huVolume2 = driver.execute_script(huVol2Selector)
-            except Exception as e:
-                print(e)
-                continue
+        try:
+            canvas = driver.find_elements_by_tag_name("canvas")[8]
+            canvas_base64 = driver.execute_script("return arguments[0].toDataURL('image/png').substring(21);",
+                                                  canvas)
+            time_text = extract_text(canvas_base64)
+            timestamp = int(parse_time(time_text))
+            huOpen = driver.execute_script(huOpenSelector)
+            huHigh = driver.execute_script(huHighSelector)
+            huLow = driver.execute_script(huLowSelector)
+            huClose = driver.execute_script(huCloseSelector)
+            huVolume1 = driver.execute_script(huVol1Selector)
+            huVolume2 = driver.execute_script(huVol2Selector)
+        except Exception as e:
+            print(e)
+            continue
 
-            if timestamp not in done:
-                writer.writerow([
-                    timestamp,
-                    huOpen,
-                    huHigh,
-                    huLow,
-                    huClose,
-                    huVolume1,
-                    huVolume2,
-                ])
-                done.add(timestamp)
+        if timestamp not in done:
+            writer.writerow([
+                timestamp,
+                huOpen,
+                huHigh,
+                huLow,
+                huClose,
+                huVolume1,
+                huVolume2,
+            ])
+            done.add(timestamp)
 
-                print(len(done), timestamp, huOpen, huHigh, huLow, huClose, huVolume1, huVolume2)
-            keyboard.press(Key.left)
-            keyboard.release(Key.left)
+            print(len(done), timestamp, huOpen, huHigh, huLow, huClose, huVolume1, huVolume2)
+        keyboard.press(Key.left)
+        keyboard.release(Key.left)
 
 
 if __name__ == '__main__':
@@ -187,8 +187,8 @@ if __name__ == '__main__':
     start_coords = driver.find_element_by_class_name("icon-2Gun4jqH-").location
 
     print(start_coords)
-    m = PyMouse()
-    m.move(start_coords["x"] - 100, 500)
+    # m = PyMouse()
+    # m.move(start_coords["x"] - 100, 500)
     # mover_thread = Thread(target=mover, args=(start_coords["x"] - 100,))
     # mover_thread.start()
 
